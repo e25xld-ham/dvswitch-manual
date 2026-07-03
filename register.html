@@ -313,23 +313,13 @@ document.getElementById('regForm').addEventListener('submit', async function(e) 
   btn.disabled = true;
 
   try {
-    const res  = await fetch(API_URL, {
+    await fetch(API_URL, {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'ngrok-skip-browser-warning': 'true'
-      },
+      mode: 'no-cors',
+      headers: { 'Content-Type': 'text/plain' },
       body: JSON.stringify({name, callsign, phone})
     });
-    const data = await res.json();
-
-    if (res.status === 409) {
-      alert(`⚠️ Callsign ${callsign} มีในระบบแล้วครับ`);
-      btn.textContent = '📨 ส่งคำขอสมัคร';
-      btn.disabled = false;
-    } else {
-      showSuccess(callsign);
-    }
+    showSuccess(callsign);
   } catch(err) {
     alert('❌ ไม่สามารถเชื่อมต่อ Server ได้ กรุณาลองใหม่อีกครั้ง');
     btn.textContent = '📨 ส่งคำขอสมัคร';
