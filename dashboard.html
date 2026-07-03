@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dashboard — สมาคมวิทยุสมัครเล่นจังหวัดชุมพร HS8AC</title>
+<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body {
+    font-family: 'Sarabun', 'TH Sarabun New', sans-serif;
+    min-height: 100vh;
+    background: linear-gradient(160deg, #0a1628 0%, #0d2654 50%, #1a4a9e 100%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 30px 16px;
+  }
+
+  .wrap { width: 100%; max-width: 720px; }
+
+  /* Header */
+  .header {
+    background: linear-gradient(135deg, #0d2654, #1a4a9e);
+    border-radius: 24px 24px 0 0;
+    padding: 26px 24px 22px;
+    text-align: center;
+    color: white;
+  }
+  .header img {
+    width: 84px; height: 84px;
+    border-radius: 50%;
+    border: 4px solid rgba(255,255,255,0.8);
+    box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+    margin-bottom: 12px;
+  }
+  .header h1 { font-size: 22px; font-weight: 700; margin-bottom: 4px; }
+  .header p { font-size: 14px; color: rgba(200,220,255,0.9); margin-bottom: 10px; }
+  .badge {
+    display: inline-block;
+    background: linear-gradient(135deg, #FFD700, #FFA500);
+    color: #0a1628;
+    font-size: 16px; font-weight: 800;
+    padding: 6px 24px;
+    border-radius: 50px;
+    letter-spacing: 1px;
+  }
+
+  .panel {
+    background: white;
+    border-radius: 0 0 24px 24px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+    padding: 24px;
+  }
+
+  /* Node status */
+  .status-card {
+    border: 2px solid #e0e8ff;
+    border-radius: 16px;
+    padding: 18px 20px;
+    margin-bottom: 18px;
+  }
+  .status-row {
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 12px; flex-wrap: wrap;
+  }
+  .status-left { display: flex; align-items: center; gap: 14px; }
+  .dot {
+    width: 16px; height: 16px; border-radius: 50%;
+    background: #22c55e;
+    box-shadow: 0 0 0 5px rgba(34,197,94,0.18);
+    animation: pulse 2s infinite;
+  }
+  .dot.off { background: #ef4444; box-shadow: 0 0 0 5px rgba(239,68,68,0.18); animation: none; }
+  @keyframes pulse {
+    0%,100% { box-shadow: 0 0 0 5px rgba(34,197,94,0.18); }
+    50%     { box-shadow: 0 0 0 9px rgba(34,197,94,0.08); }
+  }
+  .status-title { font-size: 18px; font-weight: 700; color: #0d2654; }
+  .status-sub { font-size: 13px; color: #666; margin-top: 2px; }
+  .btn-group { display: flex; gap: 8px; flex-wrap: wrap; }
+  .btn {
+    display: inline-flex; align-items: center; gap: 7px;
+    padding: 10px 18px;
+    border-radius: 50px;
+    font-size: 14px; font-weight: 700;
+    font-family: inherit;
+    text-decoration: none;
+    cursor: pointer;
+    border: none;
+    transition: transform 0.1s, box-shadow 0.2s;
+  }
+  .btn:hover { transform: translateY(-1px); }
+  .btn-stream {
+    background: linear-gradient(135deg, #dc2626, #ef4444);
+    color: white;
+    box-shadow: 0 4px 15px rgba(220,38,38,0.35);
+  }
+  .btn-stats {
+    background: #eff6ff;
+    color: #1a4a9e;
+    border: 2px solid #dbe6ff;
+  }
+  .stream-soon { font-size: 12px; color: #999; }
+
+  .connected-list {
+    margin-top: 12px;
+    padding-top: 12px;
+    border-top: 1px dashed #e0e8ff;
+    font-size: 13px; color: #555;
+    line-height: 1.8;
+  }
+  .connected-list .chip {
+    display: inline-block;
+    background: #eff6ff;
+    color: #0d2654;
+    font-family: monospace;
+    font-weight: 700;
+    font-size: 13px;
+    padding: 3px 12px;
+    border-radius: 50px;
+    margin: 2px 4px 2px 0;
+  }
+
+  /* Metric tiles */
+  .metrics {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 14px;
+    margin-bottom: 18px;
+  }
+  .metric {
+    background: #f8faff;
+    border: 2px solid #e0e8ff;
+    border-radius: 16px;
+    padding: 16px 18px;
+    text-align: center;
+  }
+  .metric .label { font-size: 13px; color: #666; margin-bottom: 4px; }
+  .metric .value { font-size: 34px; font-weight: 800; color: #0d2654; line-height: 1.2; }
+  .metric .value.green { color: #16a34a; }
+  .metric .sub { font-size: 12px; color: #999; margin-top: 2px; }
+
+  /* Service cards */
+  .section-title {
+    font-size: 15px; font-weight: 700; color: #0d2654;
+    margin: 4px 0 12px;
+  }
+  .services {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 14px;
+  }
+  .service {
+    border: 2px solid #e0e8ff;
+    border-radius: 16px;
+    padding: 18px;
+    display: flex; flex-direction: column; gap: 10px;
+    text-decoration: none;
+    transition: transform 0.1s, box-shadow 0.2s, border-color 0.2s;
+  }
+  .service:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(13,38,84,0.12);
+    border-color: #1a4a9e;
+  }
+  .service .icon { font-size: 30px; line-height: 1; }
+  .service h3 { font-size: 15px; font-weight: 700; color: #0d2654; }
+  .service p { font-size: 13px; color: #666; line-height: 1.5; flex: 1; }
+  .service .go {
+    font-size: 13px; font-weight: 700; color: #1a4a9e;
+  }
+  .service.line-card .go { color: #06c755; }
+
+  .updated {
+    text-align: center;
+    font-size: 12px; color: #999;
+    margin-top: 18px;
+  }
+
+  .footer {
+    text-align: center;
+    font-size: 12px;
+    color: rgba(200,220,255,0.8);
+    margin-top: 20px;
+  }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <div class="header">
+    <img src="images.jpg" alt="RASC Logo" onerror="this.style.display='none'">
+    <h1>สมาคมวิทยุสมัครเล่นจังหวัดชุมพร</h1>
+    <p>Chumphon Amateur Radio Society · One Stop Service</p>
+    <div class="badge">HS8AC · Node 620540</div>
+  </div>
+
+  <div class="panel">
+
+    <!-- Node status -->
+    <div class="status-card">
+      <div class="status-row">
+        <div class="status-left">
+          <div class="dot" id="statusDot"></div>
+          <div>
+            <div class="status-title" id="statusTitle">Node 620540</div>
+            <div class="status-sub" id="statusSub">กำลังโหลดข้อมูล...</div>
+          </div>
+        </div>
+        <div class="btn-group">
+          <a class="btn btn-stream" id="streamBtn" href="#" target="_blank" style="display:none">🔴 ฟังสตรีมสด</a>
+          <span class="stream-soon" id="streamSoon">🎧 ลิงก์สตรีมสด เร็วๆ นี้</span>
+          <a class="btn btn-stats" href="https://stats.allstarlink.org/stats/620540" target="_blank">📊 สถิติ Node</a>
+        </div>
+      </div>
+      <div class="connected-list" id="connectedList" style="display:none"></div>
+    </div>
+
+    <!-- Metrics -->
+    <div class="metrics">
+      <div class="metric">
+        <div class="label">👥 ผู้ใช้งาน ASL ทั้งหมด</div>
+        <div class="value" id="aslUsers">—</div>
+        <div class="sub">บัญชีที่ลงทะเบียนกับสมาคม</div>
+      </div>
+      <div class="metric">
+        <div class="label">🔗 Node ที่เชื่อมต่ออยู่</div>
+        <div class="value green" id="connectedCount">—</div>
+        <div class="sub">เชื่อมต่อกับ 620540 ขณะนี้</div>
+      </div>
+    </div>
+
+    <!-- Services -->
+    <div class="section-title">🛎️ บริการสมาชิก</div>
+    <div class="services">
+      <a class="service" href="register.html">
+        <div class="icon">📝</div>
+        <h3>ลงทะเบียนใช้งาน AllStarLink ของสมาคม</h3>
+        <p>ขอบัญชีผู้ใช้สำหรับเชื่อมต่อ Node 620540 อนุมัติภายใน 1 ชั่วโมง</p>
+        <div class="go">ไปหน้าลงทะเบียน →</div>
+      </a>
+      <a class="service" href="index.html">
+        <div class="icon">📖</div>
+        <h3>คู่มือการใช้งาน DVSWITCH Mobile</h3>
+        <p>วิธีติดตั้งและตั้งค่าแอปพลิเคชันทีละขั้นตอน พร้อมภาพประกอบ</p>
+        <div class="go">เปิดคู่มือ →</div>
+      </a>
+      <a class="service line-card" href="https://lin.ee/UcqTYjEo" target="_blank">
+        <div class="icon">💬</div>
+        <h3>ต่ออายุบัตรสมาชิก / สอบถามข้อมูล</h3>
+        <p>ติดต่อเจ้าหน้าที่สมาคมผ่าน LINE Official Account</p>
+        <div class="go">เพิ่มเพื่อนใน LINE →</div>
+      </a>
+    </div>
+
+    <div class="updated" id="updated"></div>
+  </div>
+
+  <div class="footer">ช่วยชาติ ช่วยสังคม เราสุขใจ · Node 620540 จังหวัดชุมพร</div>
+</div>
+
+<script>
+// ใส่ลิงก์สตรีมสดตรงนี้ เช่น 'https://broadcastify.com/listen/feed/xxxxx'
+const STREAM_URL = '';
+
+if (STREAM_URL) {
+  const btn = document.getElementById('streamBtn');
+  btn.href = STREAM_URL;
+  btn.style.display = 'inline-flex';
+  document.getElementById('streamSoon').style.display = 'none';
+}
+
+async function loadStatus() {
+  try {
+    const res = await fetch('status.json?t=' + Date.now(), { cache: 'no-store' });
+    if (!res.ok) throw new Error('http ' + res.status);
+    const s = await res.json();
+
+    const dot   = document.getElementById('statusDot');
+    const title = document.getElementById('statusTitle');
+    const sub   = document.getElementById('statusSub');
+
+    if (s.online) {
+      dot.classList.remove('off');
+      title.textContent = 'Node ' + s.node + ' ออนไลน์';
+      sub.textContent = s.uptime ? ('อัพไทม์ ' + s.uptime) : 'ระบบทำงานปกติ';
+    } else {
+      dot.classList.add('off');
+      title.textContent = 'Node ' + s.node + ' ออฟไลน์';
+      sub.textContent = 'ไม่สามารถเชื่อมต่อระบบได้ในขณะนี้';
+    }
+
+    document.getElementById('aslUsers').textContent = s.asl_users ?? '—';
+    document.getElementById('connectedCount').textContent = s.connected_count ?? 0;
+
+    const list = document.getElementById('connectedList');
+    if (s.connected_nodes && s.connected_nodes.length > 0) {
+      list.style.display = 'block';
+      list.innerHTML = 'เชื่อมต่ออยู่: ' +
+        s.connected_nodes.map(n => '<span class="chip">' + n + '</span>').join('');
+    } else {
+      list.style.display = 'none';
+    }
+
+    if (s.updated_display) {
+      document.getElementById('updated').textContent =
+        '🕐 ข้อมูลอัปเดตล่าสุด ' + s.updated_display + ' (อัปเดตอัตโนมัติทุก 5 นาที)';
+    }
+  } catch (e) {
+    document.getElementById('statusSub').textContent = 'ยังไม่มีข้อมูลสถานะ';
+  }
+}
+
+loadStatus();
+setInterval(loadStatus, 60000);
+</script>
+</body>
+</html>
