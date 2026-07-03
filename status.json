@@ -1,10 +1,10 @@
 {
   "node": "620540",
   "online": true,
-  "uptime": "07:38:50",
+  "uptime": "00:00:09",
   "asl_users": 39,
-  "connected_count": 1,
-  "connected_nodes": ["E25XLD-P"],
-  "updated": "2026-07-04T01:00:01+07:00",
-  "updated_display": "04/07/2026 01:00 น."
+  "connected_count": 0,
+  "connected_nodes": [],
+  "updated": "2026-07-04T01:05:01+07:00",
+  "updated_display": "04/07/2026 01:05 น."
 }
