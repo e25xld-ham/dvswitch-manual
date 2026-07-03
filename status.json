@@ -1,7 +1,7 @@
 {
   "node": "620540",
   "online": true,
-  "uptime": "01:12:46",
+  "uptime": "01:15:31",
   "asl_users": 39,
   "active_count": 1,
   "active_users": ["E25XLD-P"],
@@ -9,6 +9,6 @@
   "external_nodes": ["E25XLD"],
   "connected_count": 2,
   "connected_nodes": ["E25XLD","E25XLD-P"],
-  "updated": "2026-07-04T02:27:17+07:00",
-  "updated_display": "04/07/2026 02:27 น."
+  "updated": "2026-07-04T02:30:02+07:00",
+  "updated_display": "04/07/2026 02:30 น."
 }
