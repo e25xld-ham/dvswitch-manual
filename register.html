@@ -284,43 +284,51 @@
 </div>
 
 <script>
-const FORM_ID = '1FAIpQLSfHpK3RBx2q-RoeVRj0XnECMtM8PJ0KlIGvqYP2IK9WRe_Qlw';
-const ENTRY_NAME     = 'entry.23049680';
-const ENTRY_CALLSIGN = 'entry.574798692';
-const ENTRY_PHONE    = 'entry.14485959';
+const API_URL = 'http://44.32.81.14:5000/register';
 
 document.getElementById('callsign').addEventListener('input', function() {
   this.value = this.value.toUpperCase();
 });
 
-document.getElementById('regForm').addEventListener('submit', function(e) {
+document.getElementById('regForm').addEventListener('submit', async function(e) {
   e.preventDefault();
 
   const name     = document.getElementById('name').value.trim();
   const callsign = document.getElementById('callsign').value.trim().toUpperCase();
   const phone    = document.getElementById('phone').value.trim();
+  const btn      = document.querySelector('.btn-submit');
 
   if (!name || !callsign || !phone) return;
 
-  const url = `https://docs.google.com/forms/d/e/${FORM_ID}/formResponse`;
-  const body = new FormData();
-  body.append(ENTRY_NAME,     name);
-  body.append(ENTRY_CALLSIGN, callsign);
-  body.append(ENTRY_PHONE,    phone);
+  btn.textContent = '⏳ กำลังส่ง...';
+  btn.disabled = true;
 
-  // ส่งข้อมูลไป Google Form (no-cors)
-  fetch(url, { method: 'POST', body: body, mode: 'no-cors' })
-    .then(() => showSuccess(callsign))
-    .catch(() => showSuccess(callsign)); // แสดง success เสมอ เพราะ no-cors ไม่มี response
+  try {
+    const res  = await fetch(API_URL, {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({name, callsign, phone})
+    });
+    const data = await res.json();
 
-  showSuccess(callsign);
+    if (res.status === 409) {
+      alert(`⚠️ Callsign ${callsign} มีในระบบแล้วครับ`);
+      btn.textContent = '📨 ส่งคำขอสมัคร';
+      btn.disabled = false;
+    } else {
+      showSuccess(callsign);
+    }
+  } catch(err) {
+    alert('❌ ไม่สามารถเชื่อมต่อ Server ได้ กรุณาลองใหม่อีกครั้ง');
+    btn.textContent = '📨 ส่งคำขอสมัคร';
+    btn.disabled = false;
+  }
 });
 
 function showSuccess(callsign) {
   document.getElementById('formSection').style.display = 'none';
   document.getElementById('successSection').style.display = 'block';
-  document.getElementById('successCallsign').textContent =
-    `Callsign: ${callsign}`;
+  document.getElementById('successCallsign').textContent = `Callsign: ${callsign}`;
 }
 </script>
 </body>
