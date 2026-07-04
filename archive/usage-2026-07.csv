@@ -1,0 +1,4 @@
+date,hour,airtime_sec,keyups,rf_airtime_sec,rf_keyups,allstar_airtime_sec,allstar_keyups,unique_stations,stations
+2026-07-04,03,2,1,0,0,2,1,1,E25XLD-P
+2026-07-04,06,70,13,0,0,70,13,1,E23EEQ-P
+2026-07-04,08,205,8,205,8,0,0,1,RF
