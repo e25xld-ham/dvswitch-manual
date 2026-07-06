@@ -612,51 +612,29 @@ body {
         <div class="step"><div class="step-num">9</div>
           <div class="step-content"><strong>Password:</strong> กรอก Callsign ของท่าน <span style="color:#dc2626;font-weight:700;">(ตัวพิมพ์ใหญ่เท่านั้น ห้ามเว้นวรรค เช่น HS8XXX)</span></div></div>
 
-        <div style="margin:16px 0 8px;background:#f8faff;border:1px solid #dde6f7;border-radius:12px;padding:14px 16px;">
-          <div style="font-size:12px;font-weight:700;color:#1a4a9e;margin-bottom:10px;">ตัวอย่างการกรอก Username &amp; Password</div>
-          <div id="dv-anim" style="width:190px;margin:0 auto;background:#1a1a1a;border-radius:22px;padding:10px 7px;">
-            <div style="background:#111;border-radius:14px;padding:6px 0 10px;">
-              <div style="font-size:10px;color:#aaa;text-align:center;padding:4px 0 6px;letter-spacing:0.5px;">Account setup</div>
-              <div style="height:3px;background:#333;border-radius:2px;margin:0 8px 8px;"><div id="dv-prog" style="height:100%;background:#4a9eff;border-radius:2px;width:0%;transition:width 0.5s;"></div></div>
-              <div style="padding:0 8px;">
-                <div style="margin-bottom:6px;"><div style="font-size:10px;color:#888;margin-bottom:2px;">Protocol</div><div style="background:#222;border-radius:5px;padding:4px 7px;font-size:11px;color:#4ade80;border:1px solid #4ade80;">IAX2</div></div>
-                <div style="margin-bottom:6px;"><div style="font-size:10px;color:#888;margin-bottom:2px;">Hostname</div><div style="background:#222;border-radius:5px;padding:4px 7px;font-size:11px;color:#4ade80;border:1px solid #4ade80;">44.32.81.14</div></div>
-                <div style="margin-bottom:6px;"><div style="font-size:10px;color:#888;margin-bottom:2px;">Port</div><div style="background:#222;border-radius:5px;padding:4px 7px;font-size:11px;color:#4ade80;border:1px solid #4ade80;">4569</div></div>
-                <div style="margin-bottom:6px;"><div style="font-size:10px;color:#888;margin-bottom:2px;"><span style="background:#4a9eff;color:#fff;border-radius:50%;width:14px;height:14px;display:inline-flex;align-items:center;justify-content:center;font-size:9px;margin-right:3px;">8</span>Username</div><div id="dv-user" style="background:#222;border-radius:5px;padding:4px 7px;font-size:11px;color:#fff;border:1px solid #4a9eff;min-height:22px;"></div></div>
-                <div style="margin-bottom:6px;"><div style="font-size:10px;color:#888;margin-bottom:2px;"><span style="background:#4a9eff;color:#fff;border-radius:50%;width:14px;height:14px;display:inline-flex;align-items:center;justify-content:center;font-size:9px;margin-right:3px;">9</span>Password</div><div id="dv-pass" style="background:#222;border-radius:5px;padding:4px 7px;font-size:11px;color:#fff;border:1px solid #333;min-height:22px;"></div></div>
-                <div><div style="font-size:10px;color:#888;margin-bottom:2px;">Node</div><div style="background:#222;border-radius:5px;padding:4px 7px;font-size:11px;color:#4ade80;border:1px solid #4ade80;">620540</div></div>
-              </div>
-            </div>
+        <div style="margin:16px 0 8px;background:#f0f6ff;border:1px solid #c7d9f5;border-radius:12px;padding:16px;">
+          <div style="font-size:13px;font-weight:700;color:#1a4a9e;margin-bottom:4px;">พิมพ์ Callsign ของท่าน</div>
+          <div style="font-size:11px;color:#555;margin-bottom:10px;">ระบบจะแปลงเป็นตัวพิมพ์ใหญ่ให้อัตโนมัติ แล้วกด Copy ไปวางใน Username และ Password</div>
+          <div style="display:flex;gap:8px;align-items:center;">
+            <input id="cs-input" type="text" placeholder="เช่น HS8XXX" maxlength="12"
+              style="flex:1;padding:9px 12px;font-size:15px;font-weight:700;border:2px solid #4a9eff;border-radius:8px;outline:none;letter-spacing:1px;text-transform:uppercase;font-family:monospace;background:#fff;color:#0d2654;"
+              oninput="this.value=this.value.toUpperCase().replace(/\s/g,'')">
+            <button id="cs-btn" onclick="
+              var v=document.getElementById('cs-input').value.trim();
+              if(!v){document.getElementById('cs-msg').textContent='กรุณากรอก Callsign ก่อนครับ';return;}
+              navigator.clipboard.writeText(v).then(function(){
+                document.getElementById('cs-msg').textContent='✓ คัดลอก '+v+' แล้ว — วางใน Username และ Password ได้เลย';
+                document.getElementById('cs-btn').style.background='#16a34a';
+                setTimeout(function(){document.getElementById('cs-btn').style.background='#1a4a9e';},2000);
+              }).catch(function(){
+                document.getElementById('cs-msg').textContent='ไม่สามารถ copy อัตโนมัติ — กรุณา copy ด้วยตนเอง: '+v;
+              });"
+              style="padding:9px 16px;background:#1a4a9e;color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;transition:background 0.3s;white-space:nowrap;">
+              📋 Copy
+            </button>
           </div>
-          <div id="dv-tip" style="margin-top:10px;font-size:11px;color:#1a4a9e;text-align:center;min-height:32px;"></div>
+          <div id="cs-msg" style="margin-top:8px;font-size:12px;color:#16a34a;min-height:18px;"></div>
         </div>
-        <script>
-        (function(){
-          var steps=[
-            {prog:15,user:'',pass:'',ub:'#4a9eff',pb:'#333',tip:'กำลังกรอก Username...'},
-            {prog:45,user:'HS8',pass:'',ub:'#4a9eff',pb:'#333',tip:'ตัวพิมพ์ใหญ่เท่านั้น ห้ามเว้นวรรค'},
-            {prog:75,user:'HS8XXX',pass:'',ub:'#4ade80',pb:'#4a9eff',tip:'Password = Callsign เดิม'},
-            {prog:100,user:'HS8XXX',pass:'HS8XXX',ub:'#4ade80',pb:'#4ade80',tip:'✓ กด Save เชื่อมต่อได้เลย'},
-            {prog:0,user:'',pass:'',ub:'#4a9eff',pb:'#333',tip:''}
-          ];
-          var cur=0;
-          function render(s){
-            document.getElementById('dv-prog').style.width=s.prog+'%';
-            var uel=document.getElementById('dv-user');
-            var pel=document.getElementById('dv-pass');
-            uel.innerHTML=s.user+(s.ub==='#4a9eff'?'<span style="display:inline-block;width:2px;height:11px;background:#4a9eff;margin-left:1px;vertical-align:middle;animation:dvblink 0.8s infinite;"></span>':'');
-            pel.innerHTML=s.pass+(s.pb==='#4a9eff'?'<span style="display:inline-block;width:2px;height:11px;background:#4a9eff;margin-left:1px;vertical-align:middle;animation:dvblink 0.8s infinite;"></span>':'');
-            uel.style.borderColor=s.ub;
-            uel.style.color=s.ub==='#4ade80'?'#4ade80':'#fff';
-            pel.style.borderColor=s.pb;
-            pel.style.color=s.pb==='#4ade80'?'#4ade80':'#fff';
-            document.getElementById('dv-tip').textContent=s.tip;
-          }
-          if(!document.getElementById('dvblink-style')){var st=document.createElement('style');st.id='dvblink-style';st.textContent='@keyframes dvblink{0%,100%{opacity:1}50%{opacity:0}}';document.head.appendChild(st);}
-          render(steps[0]);
-          setInterval(function(){cur=(cur+1)%steps.length;render(steps[cur]);},1800);
-        })();
-        </script>
         <div class="step"><div class="step-num">10</div>
           <div class="step-content"><strong>CallerID:</strong> กรอก Callsign ของท่าน</div></div>
         <div class="step"><div class="step-num">11</div>
